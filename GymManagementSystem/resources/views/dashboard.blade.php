@@ -1,17 +1,52 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    {{ __("You're logged in!") }}
-                </div>
+@section('content')
+    <div class="container mt-4">
+        <h1>Dashboard</h1>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Aquí agregamos el gráfico -->
+                <canvas id="membershipChart"></canvas>
             </div>
         </div>
     </div>
-</x-app-layout>
+
+    <script>
+        // Espera a que el DOM se haya cargado completamente antes de ejecutar el script
+        document.addEventListener("DOMContentLoaded", function() {
+            // Asegúrate de que el elemento canvas exista antes de intentar acceder a él
+            var ctx = document.getElementById('membershipChart').getContext('2d');
+
+            // Crear el gráfico
+            var membershipChart = new Chart(ctx, {
+                type: 'doughnut', // Tipo de gráfico
+                data: {
+                    labels: ['Basic', 'Premium', 'VIP'], // Las categorías
+                    datasets: [{
+                        label: 'Membership Types',
+                        data: [{{ $basicMembers }}, {{ $premiumMembers }}, {{ $vipMembers }}], // Los valores
+                        backgroundColor: ['#ff6384', '#36a2eb', '#ffcd56'], // Colores
+                        borderColor: ['#ff6384', '#36a2eb', '#ffcd56'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.label + ': ' + tooltipItem.raw + ' members';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+@endsection

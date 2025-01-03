@@ -1,29 +1,32 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')  <!-- Extiende el layout principal -->
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form')
-                </div>
-            </div>
+@section('content')
+    <!-- Contenedor principal de la página -->
+    <div class="container">
 
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-password-form')
-                </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.delete-user-form')
-                </div>
+        <!-- Sección para actualizar la información del perfil -->
+        <div class="mt-4 p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+            <div class="max-w-xl">
+                <!-- Incluye el formulario para actualizar la información del perfil -->
+                @include('profile.partials.update-profile-information-form')
             </div>
         </div>
+
+        <!-- Sección para actualizar la contraseña -->
+        <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg mt-6">
+            <div class="max-w-xl">
+                <!-- Incluye el formulario para actualizar la contraseña -->
+                @include('profile.partials.update-password-form')
+            </div>
+        </div>
+
+        <!-- Sección para eliminar el usuario -->
+        <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg mt-6">
+            <div class="max-w-xl">
+                <!-- Incluye el formulario para eliminar el usuario -->
+                @include('profile.partials.delete-user-form')
+            </div>
+        </div>
+
     </div>
-</x-app-layout>
+@endsection
