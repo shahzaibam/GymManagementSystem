@@ -2,16 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Member;
+use App\Models\GymMember;
 use Illuminate\Http\Request;
 
-class MemberController extends Controller
+class GymMemberController extends Controller
 {
     public function index()
     {
-        $members = Member::all();
+        // Paginamos los miembros del usuario logueado
+
+        if(auth()->user()->role == "Employee") {
+            $members = GymMember::where('user_id', auth()->id())->paginate(10);
+        }else {
+            $members = GymMember::paginate(10);
+        }
+
+
         return view('members.index', compact('members'));
     }
+
 
     public function create()
     {
@@ -29,13 +38,18 @@ class MemberController extends Controller
             'membership_end_date' => 'required|date|max:50',
         ]);
 
-        Member::create($request->all());
-        return redirect()->route('members.index')->with('success', 'Member added successfully!');
+        // Asignar el ID del usuario autenticado
+        $request->merge(['user_id' => auth()->id()]);
+
+        // Crear el member con la relación al usuario
+        GymMember::create($request->all());
+
+        return redirect()->route('members.index')->with('success', 'GymMember added successfully!');
     }
 
     public function edit($id)
     {
-        $member = Member::findOrFail($id);
+        $member = GymMember::findOrFail($id);
         return view('members.edit', compact('member'));
     }
 
@@ -43,25 +57,32 @@ class MemberController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|email',
+            'email' => 'required|email',
             'phone' => 'required|string|max:15',
             'membership_type' => 'required|string|max:50',
             'membership_start_date' => 'required|date|max:50',
             'membership_end_date' => 'required|date|max:50',
         ]);
 
-        $member = Member::findOrFail($id);
+        $member = GymMember::findOrFail($id);
+
+        // Asegurarse de que el miembro pertenece al usuario autenticado
+        if ($member->user_id !== auth()->id()) {
+            return redirect()->route('members.index')->with('error', 'You cannot edit this member.');
+        }
+
         $member->update($request->all());
-        return redirect()->route('members.index')->with('success', 'Member updated successfully!');
+
+        return redirect()->route('members.index')->with('success', 'GymMember updated successfully!');
     }
 
 
 
     public function destroy($id)
     {
-        $member = Member::findOrFail($id);
+        $member = GymMember::findOrFail($id);
         $member->delete();
-        return redirect()->route('members.index')->with('success', 'Member deleted successfully!');
+        return redirect()->route('members.index')->with('success', 'GymMember deleted successfully!');
     }
 
 
@@ -69,10 +90,10 @@ class MemberController extends Controller
     public function dashboard()
     {
         // Contar los miembros de cada tipo
-        $totalMembers = Member::count();
-        $basicMembers = Member::where('membership_type', 'Basic')->count();
-        $premiumMembers = Member::where('membership_type', 'Premium')->count();
-        $vipMembers = Member::where('membership_type', 'VIP')->count();
+        $totalMembers = GymMember::count();
+        $basicMembers = GymMember::where('membership_type', 'Basic')->count();
+        $premiumMembers = GymMember::where('membership_type', 'Premium')->count();
+        $vipMembers = GymMember::where('membership_type', 'VIP')->count();
 
         // Pasar estos datos a la vista del dashboard
         return view('dashboard', compact('totalMembers', 'basicMembers', 'premiumMembers', 'vipMembers'));

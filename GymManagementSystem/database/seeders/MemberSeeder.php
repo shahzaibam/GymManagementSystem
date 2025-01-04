@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Member;
+use App\Models\GymMember;
 
 class MemberSeeder extends Seeder
 {
@@ -15,6 +15,6 @@ class MemberSeeder extends Seeder
     public function run()
     {
         // Crea 20 miembros usando la factory
-        Member::factory(100)->create();
+        GymMember::factory(100)->create();
     }
 }

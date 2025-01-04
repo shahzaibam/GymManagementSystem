@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('members', function (Blueprint $table) {
+        Schema::create('gym_members', function (Blueprint $table) {
             $table->id(); // Clave primaria
             $table->string('name');
             $table->string('email')->unique();

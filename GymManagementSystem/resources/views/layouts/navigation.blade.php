@@ -20,6 +20,20 @@
                         {{ __('Members') }}
                     </x-nav-link>
 
+                    @if(Auth::user()->role == 'Admin')
+                        <x-nav-link :href="route('register')" :active="request()->routeIs('register')">
+
+                            {{ __('Register a Employee') }}
+                        </x-nav-link>
+                    @endif
+
+                    @if(Auth::user()->role == 'Admin')
+                        <x-nav-link :href="route('employees')" :active="request()->routeIs('employees')">
+
+                            {{ __('Employees') }}
+                        </x-nav-link>
+                    @endif
+
                 </div>
             </div>
 

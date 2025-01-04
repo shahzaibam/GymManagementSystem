@@ -4,8 +4,9 @@
     <div class="container mt-4">
         <h1>Dashboard</h1>
 
-        <div class="row">
-            <div class="col-lg-8">
+        <div class="row mt-5">
+            <h1>Plans chart</h1>
+            <div class="col-lg-4">
                 <!-- Aquí agregamos el gráfico -->
                 <canvas id="membershipChart"></canvas>
             </div>
@@ -22,7 +23,7 @@
             var membershipChart = new Chart(ctx, {
                 type: 'doughnut', // Tipo de gráfico
                 data: {
-                    labels: ['Basic', 'Premium', 'VIP'], // Las categorías
+                    labels: ['Basic', 'Premium', 'VIP'],
                     datasets: [{
                         label: 'Membership Types',
                         data: [{{ $basicMembers }}, {{ $premiumMembers }}, {{ $vipMembers }}], // Los valores

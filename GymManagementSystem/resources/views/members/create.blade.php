@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container mt-4">
-        <h1>{{ isset($member) ? 'Edit Member' : 'Add Member' }}</h1>
+        <h1>{{ isset($member) ? 'Edit GymMember' : 'Add GymMember' }}</h1>
 
         <form action="{{ isset($member) ? route('members.update', $member->id) : route('members.store') }}" method="POST">
             @csrf

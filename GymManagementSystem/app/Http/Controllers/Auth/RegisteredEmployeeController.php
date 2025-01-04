@@ -12,14 +12,29 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
-class RegisteredUserController extends Controller
+class RegisteredEmployeeController extends Controller
 {
+
+    public function index()
+    {
+        // Paginamos los miembros del usuario logueado
+
+        if(auth()->user()->role == "Admin") {
+            $employees = User::paginate(10);
+        }
+
+
+        return view('employees.index', compact('employees'));
+    }
+
+
+
     /**
      * Display the registration view.
      */
     public function create(): View
     {
-        return view('auth.register');
+        return view('registerUser.register');
     }
 
     /**
@@ -32,18 +47,20 @@ class RegisteredUserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'role' => ['required', 'string', 'max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'role' => $request->role,
             'password' => Hash::make($request->password),
         ]);
 
         event(new Registered($user));
 
-        Auth::login($user);
+//        Auth::login($user);
 
         return redirect(route('dashboard', absolute: false));
     }
